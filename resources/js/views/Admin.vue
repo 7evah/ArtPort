@@ -1,0 +1,17 @@
+<template>
+    <div>
+      <h1>Admin Dashboard</h1>
+      <p>Welcome, Admin!</p>
+    </div>
+  </template>
+  
+  <script>
+  export default {
+    name: 'Admin'
+  };
+  </script>
+  
+  <style scoped>
+  /* Add your styles here */
+  </style>
+  
