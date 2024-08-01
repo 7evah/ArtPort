@@ -45,7 +45,7 @@
           } else if (role_id === 2) {
             router.push({ name: 'artist' });
           } else {
-            router.push({ name: 'home' });
+            router.push({ name: 'artworks-list' });
           }
         } catch (err) {
           error.value = err.response?.data?.message || 'Login failed';

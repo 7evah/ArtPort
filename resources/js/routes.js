@@ -4,6 +4,8 @@ import Home from './views/Home.vue';
 import Register from './views/Register.vue';
 import Admin from './views/Admin.vue';
 import Artist from './views/Artist.vue';
+import ArtworksList from './components/ArtworksList.vue';
+import ArtworkDetails from './components/ArtworkDetails.vue';
 
 const routes = [
   {
@@ -30,7 +32,18 @@ const routes = [
     path: '/artist',
     name: 'artist',
     component: Artist
-  }
+  },
+  {
+    path: '/artworks',
+    name: 'artworks-list',
+    component: ArtworksList,
+  },
+  {
+    path: '/artworks/:id',
+    name: 'artwork-details',
+    component: ArtworkDetails,
+    props: true
+  },
 ];
 
 const router = createRouter({

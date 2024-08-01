@@ -42,36 +42,35 @@ class ArtworkController extends Controller
         return response()->json($artwork);
     }
 
-    public function update(Request $request, Artwork $artwork)
+
+
+    public function update(Request $request, $artwork)
     {
-        if (Auth::id() !== $artwork->user_id) {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
-    
         $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'image' => 'required|image|max:2048',
+            'description' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
     
+        $artwork = Artwork::findOrFail($artwork);
         $artwork->title = $request->title;
         $artwork->description = $request->description;
     
         if ($request->hasFile('image')) {
-            // Delete the old image from storage
-            Storage::disk('public')->delete($artwork->image_path);
-    
-            // Store the new image
-            $path = $request->file('image')->store('artworks', 'public');
-            $artwork->image_path = $path;
+            $imageName = time().'.'.$request->image->extension();
+            $request->image->move(public_path('images'), $imageName);
+            $artwork->image = $imageName;
         }
     
         $artwork->save();
     
-        return response()->json($artwork);
+        return response()->json(['message' => 'Artwork updated successfully']);
     }
     
+    
 
+
+    
     public function destroy(Artwork $artwork)
     {
         if (Auth::id() !== $artwork->user_id) {

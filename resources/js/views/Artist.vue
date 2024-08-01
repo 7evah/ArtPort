@@ -131,37 +131,49 @@ export default {
       editArtworkForm.value.visible = true;
     };
 
-    const updateArtwork = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const formData = new FormData();
-        formData.append('title', editArtworkForm.value.data.title);
-        formData.append('description', editArtworkForm.value.data.description);
-        if (editArtworkForm.value.data.image) {
-          formData.append('image', editArtworkForm.value.data.image);
-        }
+   const updateArtwork = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    const formData = new FormData();
+    formData.append('title', editArtworkForm.value.data.title);
+    formData.append('description', editArtworkForm.value.data.description);
+    if (editArtworkForm.value.data.image) {
+      formData.append('image', editArtworkForm.value.data.image);
+    }
 
-        const response = await axios.put(`/api/artworks/update/${editArtworkForm.value.data.id}`, formData, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data'
-          }
-        });
+    console.log('Updating artwork with data:', {
+      title: editArtworkForm.value.data.title,
+      description: editArtworkForm.value.data.description,
+      image: editArtworkForm.value.data.image,
+    });
 
-        const updatedArtwork = response.data;
-        const index = artworks.value.findIndex(art => art.id === updatedArtwork.id);
-        artworks.value[index] = updatedArtwork;
-
-        cancelEdit();
-      } catch (error) {
-        console.error('Error updating artwork:', error);
+    const response = await axios.put(`/api/artworks/update/${editArtworkForm.value.data.id}`, formData, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data'
       }
-    };
+    });
 
-    const cancelEdit = () => {
-      editArtworkForm.value.visible = false;
-      editArtworkForm.value.data = { id: null, title: '', description: '', image: null };
-    };
+    const updatedArtwork = response.data;
+    const index = artworks.value.findIndex(art => art.id === updatedArtwork.id);
+    if (index !== -1) {
+      artworks.value[index] = updatedArtwork;
+    } else {
+      console.warn('Updated artwork not found in list:', updatedArtwork);
+    }
+
+    cancelEdit();
+  } catch (error) {
+    console.error('Error updating artwork:', error.response.data);
+  }
+};
+
+const cancelEdit = () => {
+  editArtworkForm.value.visible = false;
+  editArtworkForm.value.data = { id: null, title: '', description: '', image: null };
+};
+
+
 
     const deleteArtwork = async (id) => {
       try {
